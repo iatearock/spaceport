@@ -22,6 +22,7 @@ use Sf.Audio, Sf.Audio.Music;
 with Ada.Numerics.Real_Arrays; use Ada.Numerics.Real_Arrays;
 with Isometric;                use Isometric;
 with Line;
+with Ship;
 
 with Sf.Graphics.VertexArray;   use Sf.Graphics.VertexArray;
 with Sf.Graphics.PrimitiveType; use Sf.Graphics.PrimitiveType;
@@ -51,17 +52,14 @@ procedure Game is
    WL         : Line.World_Line (0 .. 2);
    SL         : Line.Screen_Line (0 .. 2);
    SV         : Line.Screen_Vertices (0 .. 2);
+   Ship_1     : Ship.Ship;
+   Ship_Name  : String      := "012345";
 begin
 
    WL         := ((0.0, 0.0), (4.0, 0.0), (4.0, 1.0));
    SL         := Line.World_To_Screen (WL);
    Vertex_Arr := Line.Line_To_Vertex_Arr_Ptr (SL);
-   -- Vertex_Arr := create;
-   -- setPrimitiveType (Vertex_Arr, sfLinesStrip);
-   -- append (Vertex_Arr, Line.Vector_To_Vertex ((200.0, 300.0)));
-   -- append (Vertex_Arr, Line.Vector_To_Vertex ((230.0, 300.0)));
-   -- append (Vertex_Arr, Line.Vector_To_Vertex ((230.0, 390.0)));
-   -- append (Vertex_Arr, Line.Vector_To_Vertex ((200.0, 390.0)));
+   Ship_1     := Ship.Spawn ((0.0, -20.0), Ship.Small, Ship_Name);
 
    -- Create the main Window
    Window :=
@@ -115,6 +113,7 @@ begin
       -- drawSprite (Window, Sprite, null);
 
       drawVertexArray (Window, Vertex_Arr, null);
+      Ship.Draw (Window, Ship_1, Font);
 
       -- -- Draw the text
       drawText (Window, Text, null);
@@ -131,7 +130,8 @@ begin
    destroy (Texture);
    destroy (Window);
 
-   destroy (Vertex_Arr);
+   destroy (Vertex_Arr); -- path
+   Ship.Destroy (Ship_1);
 
 exception
    when others =>

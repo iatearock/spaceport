@@ -11,10 +11,6 @@ with Isometric;
 
 package body Line is
 
---    type World_Line is array (Integer range <>) of Real_Vector;
---    type Screen_Line is array (Integer range <>) of Real_Vector;
---    type Screen_Vertices is array (integer range <>) of sfVertex;
-
    function World_To_Screen (w : World_Line) return Screen_Line is
       s : Screen_Line (w'First .. w'Last);
    begin
@@ -61,7 +57,6 @@ package body Line is
       vertex     : aliased sfVertex := vertices (vertices'First);
       Vertex_Acc : access sfVertex  := vertex'Access;
    begin
-      -- Ada.Text_IO.Put_Line(vertices(vertices'Last).Position.x'Image);
       drawPrimitives
         (renderWindow, Vertex_Acc, vertices'Length, sfLineStrip, null);
    end Draw;

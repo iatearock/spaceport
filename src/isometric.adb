@@ -11,8 +11,8 @@ package body Isometric is
       return (SX, SY);
    end To_Screen;
 
-   procedure Set_Tile_Size (S : Float) is 
+   procedure Set_Tile_Size (S : Float) is
    begin
-    Tile_Size := S;
-    end Set_Tile_Size;
+      Tile_Size := S;
+   end Set_Tile_Size;
 end Isometric;
