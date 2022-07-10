@@ -1,11 +1,7 @@
--- with Ada.Numerics.Real_Arrays; use Ada.Numerics.Real_Arrays;
-with Ada.Text_IO;
--- with Sf.Graphics; use Sf.Graphics;
--- with Sf.Graphics.Vertex;        use Sf.Graphics.Vertex;
 with Sf.Graphics.RenderWindow;  use Sf.Graphics.RenderWindow;
-with Sf.System.Vector2;         use Sf.System.Vector2;
 with Sf.Graphics.Color;         use Sf.Graphics.Color;
 with Sf.Graphics.PrimitiveType; use Sf.Graphics.PrimitiveType;
+with Sf.Graphics.VertexArray;   use Sf.Graphics.VertexArray;
 
 with Isometric;
 
@@ -24,7 +20,7 @@ package body Line is
       sv : sfVertex;
    begin
       sv.position := (x => v (v'First), y => v (v'Last));
-      sv.color    := sfWhite;
+      sv.color    := sfCyan;
       return sv;
    end Vector_To_Vertex;
 
@@ -54,8 +50,8 @@ package body Line is
      (renderWindow : Sf.Graphics.sfRenderWindow_Ptr;
       vertices     : Screen_Vertices)
    is
-      vertex     : aliased sfVertex := vertices (vertices'First);
-      Vertex_Acc : access sfVertex  := vertex'Access;
+      vertex     : aliased sfVertex         := vertices (vertices'First);
+      Vertex_Acc : constant access sfVertex := vertex'Access;
    begin
       drawPrimitives
         (renderWindow, Vertex_Acc, vertices'Length, sfLineStrip, null);

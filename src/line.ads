@@ -1,8 +1,7 @@
 with Ada.Numerics.Real_Arrays; use Ada.Numerics.Real_Arrays;
 
 with Sf.Graphics;
-with Sf.Graphics.Vertex;      use Sf.Graphics.Vertex;
-with Sf.Graphics.VertexArray; use Sf.Graphics.VertexArray;
+with Sf.Graphics.Vertex; use Sf.Graphics.Vertex;
 
 package Line is
 

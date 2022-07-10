@@ -56,10 +56,11 @@ procedure Game is
    Ship_Name  : String      := "012345";
 begin
 
-   WL         := ((0.0, 0.0), (4.0, 0.0), (4.0, 1.0));
-   SL         := Line.World_To_Screen (WL);
-   Vertex_Arr := Line.Line_To_Vertex_Arr_Ptr (SL);
-   Ship_1     := Ship.Spawn ((0.0, -20.0), Ship.Small, Ship_Name);
+   WL              := ((0.0, 0.0), (4.0, 0.0), (4.0, 1.0));
+   SL              := Line.World_To_Screen (WL);
+   Vertex_Arr      := Line.Line_To_Vertex_Arr_Ptr (SL);
+   Ship_1          := Ship.Spawn ((0.0, -20.0), Ship.Small, Ship_Name);
+   Ship_1.Waypoint := (0.0, 40.0);
 
    -- Create the main Window
    Window :=
@@ -113,6 +114,7 @@ begin
       -- drawSprite (Window, Sprite, null);
 
       drawVertexArray (Window, Vertex_Arr, null);
+      Ship.Update (Ship_1);
       Ship.Draw (Window, Ship_1, Font);
 
       -- -- Draw the text
