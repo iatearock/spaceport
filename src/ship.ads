@@ -37,4 +37,5 @@ package Ship is
 
    procedure Set_Waypoint (S : in out Ship; P : Real_Vector);
 
+   function Speed (ShipClass : Ship_Class) return Float;
 end Ship;

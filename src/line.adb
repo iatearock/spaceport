@@ -1,5 +1,4 @@
 with Sf.Graphics.RenderWindow;  use Sf.Graphics.RenderWindow;
-with Sf.Graphics.Color;         use Sf.Graphics.Color;
 with Sf.Graphics.PrimitiveType; use Sf.Graphics.PrimitiveType;
 with Sf.Graphics.VertexArray;   use Sf.Graphics.VertexArray;
 
@@ -16,35 +15,59 @@ package body Line is
       return s;
    end World_To_Screen;
 
-   function Vector_To_Vertex (v : Real_Vector) return sfVertex is
+   function World_To_Screen (w : Real_Vector) return Real_Vector is
+      s : Real_Vector (w'First .. w'Last);
+   begin
+      s := Isometric.To_Screen (w);
+      return s;
+   end World_To_Screen;
+
+   function Vector_To_Vertex (v : Real_Vector; c : sfColor) return sfVertex is
       sv : sfVertex;
    begin
       sv.position := (x => v (v'First), y => v (v'Last));
-      sv.color    := sfCyan;
+      sv.color    := c;
       return sv;
    end Vector_To_Vertex;
 
-   function Line_To_Vertex (s : Screen_Line) return Screen_Vertices is
+   function Screen_Line_To_Vertex
+     (s : Screen_Line; c : sfColor) return Screen_Vertices
+   is
       sv : Screen_Vertices (s'First .. s'Last);
    begin
       for I in s'Range loop
-         sv (I) := Vector_To_Vertex (s (I));
+         sv (I) := Vector_To_Vertex (s (I), c);
       end loop;
       return sv;
-   end Line_To_Vertex;
+   end Screen_Line_To_Vertex;
 
-   function Line_To_Vertex_Arr_Ptr
-     (s : Screen_Line) return Sf.Graphics.sfVertexArray_Ptr
+   function Screen_Line_To_Vertex_Arr_Ptr
+     (s : Screen_Line; c : sfColor) return Sf.Graphics.sfVertexArray_Ptr
    is
       ptr : Sf.Graphics.sfVertexArray_Ptr;
    begin
       ptr := create;
       setPrimitiveType (ptr, sfLinesStrip);
       for I in s'Range loop
-         append (ptr, Vector_To_Vertex (s (I)));
+         append (ptr, Vector_To_Vertex (s (I), c));
       end loop;
       return ptr;
-   end Line_To_Vertex_Arr_Ptr;
+   end Screen_Line_To_Vertex_Arr_Ptr;
+
+   function World_Line_To_Vertex_Arr_Ptr
+     (w : World_Line; c : sfColor) return Sf.Graphics.sfVertexArray_Ptr
+   is
+      ptr : Sf.Graphics.sfVertexArray_Ptr;
+      SL  : Screen_Line (w'First .. w'Last);
+   begin
+      ptr := create;
+      setPrimitiveType (ptr, sfLinesStrip);
+      SL := World_To_Screen (w);
+      for I in SL'Range loop
+         append (ptr, Vector_To_Vertex (SL (I), c));
+      end loop;
+      return ptr;
+   end World_Line_To_Vertex_Arr_Ptr;
 
    procedure Draw
      (renderWindow : Sf.Graphics.sfRenderWindow_Ptr;
@@ -56,5 +79,16 @@ package body Line is
       drawPrimitives
         (renderWindow, Vertex_Acc, vertices'Length, sfLineStrip, null);
    end Draw;
+
+   procedure Draw_World_line
+     (renderWindow : Sf.Graphics.sfRenderWindow_Ptr; WL : World_Line;
+      c            : sfColor)
+   is
+
+      ptr : Sf.Graphics.sfVertexArray_Ptr;
+   begin
+      ptr := World_Line_To_Vertex_Arr_Ptr (WL, c);
+      drawVertexArray (renderWindow, ptr, null);
+   end Draw_World_line;
 
 end Line;

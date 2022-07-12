@@ -1,7 +1,7 @@
 with Ada.Numerics.Real_Arrays; use Ada.Numerics.Real_Arrays;
 package Isometric is
 
-   Tile_Size        : Float := 16.0;
+   Tile_Size        : Float := 64.0;
    Half_Tile_Width  : Float := Tile_Size / 2.0;
    Half_Tile_Height : Float := Half_Tile_Width / 2.0;
 

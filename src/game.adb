@@ -1,7 +1,6 @@
 with Ada.Command_Line; use Ada.Command_Line;
 with Ada.Text_IO;      use Ada.Text_IO;
 with Ada.Directories;  use Ada.Directories;
--- with Ada.Strings.Fixed; use Ada.Strings.Fixed;
 
 with Sf.Window.VideoMode;
 use Sf, Sf.Window, Sf.Window.VideoMode;
@@ -16,13 +15,14 @@ with Sf.Graphics.Texture;      use Sf.Graphics.Texture;
 with Sf.Graphics.Font;         use Sf.Graphics.Font;
 with Sf.Graphics.Text;         use Sf.Graphics.Text;
 
-with Sf.Audio.Music;
-use Sf.Audio, Sf.Audio.Music;
+--  with Sf.Audio.Music;
+--  use Sf.Audio, Sf.Audio.Music;
 
 with Ada.Numerics.Real_Arrays; use Ada.Numerics.Real_Arrays;
 with Isometric;                use Isometric;
 with Line;
 with Ship;
+with Gate;
 
 with Sf.Graphics.VertexArray;   use Sf.Graphics.VertexArray;
 with Sf.Graphics.PrimitiveType; use Sf.Graphics.PrimitiveType;
@@ -39,9 +39,9 @@ procedure Game is
    Sprite  : sfSprite_Ptr;
    Font    : sfFont_Ptr;
    Text    : sfText_Ptr;
-   Music   : sfMusic_Ptr;
-   event   : sfEvent;
-   View    : sfView_Ptr;
+   --  Music   : sfMusic_Ptr;
+   event : sfEvent;
+   View  : sfView_Ptr;
 
    ExeDir : constant String := Containing_Directory (Command_Name);
 
@@ -54,13 +54,15 @@ procedure Game is
    SV         : Line.Screen_Vertices (0 .. 2);
    Ship_1     : Ship.Ship;
    Ship_Name  : String      := "012345";
+   Gate1      : Gate.Gate;
 begin
 
    WL              := ((0.0, 0.0), (4.0, 0.0), (4.0, 1.0));
    SL              := Line.World_To_Screen (WL);
-   Vertex_Arr      := Line.Line_To_Vertex_Arr_Ptr (SL);
+   Vertex_Arr      := Line.Screen_Line_To_Vertex_Arr_Ptr (SL, sfCyan);
    Ship_1          := Ship.Spawn ((0.0, -20.0), Ship.Small, Ship_Name);
-   Ship_1.Waypoint := (0.0, 40.0);
+   Ship_1.Waypoint := (0.0, 5.0);
+   Gate1           := Gate.Create ((0.0, 0.0), (1.0, 0.0));
 
    -- Create the main Window
    Window :=
@@ -71,6 +73,7 @@ begin
    View := create;
    setSize (View, (800.0, 600.0));
    setCenter (View, (0.0, 0.0));
+   zoom (View, 1.0);
 
    setView (Window, View);
 
@@ -83,17 +86,17 @@ begin
    -- Create a graphical text to display
    Font := createFromFile (ExeDir & "/Roboto-Regular.ttf");
 
-   Text := create;
-   setString (Text, "ao");
-   setFont (Text, Font);
-   setCharacterSize (Text, 50);
-   setPosition (Text, (0.0, 0.0));
+   --  Text := create;
+   --  setString (Text, "ao");
+   --  setFont (Text, Font);
+   --  setCharacterSize (Text, 50);
+   --  setPosition (Text, (10.0, 5.0));
 
-   -- -- Load a music file to play
-   -- Music := createFromFile("nice_music.ogg");
+   -- Load a music file to play
+   --  Music := createFromFile("nice_music.ogg");
 
    -- -- Play the music
-   -- play(Music);
+   --  play(Music);
 
    -- Start the game loop
    while isOpen (Window) loop
@@ -116,16 +119,17 @@ begin
       drawVertexArray (Window, Vertex_Arr, null);
       Ship.Update (Ship_1);
       Ship.Draw (Window, Ship_1, Font);
+      Gate.Draw (Window, Gate1, Font);
 
-      -- -- Draw the text
-      drawText (Window, Text, null);
+      -- Draw the text
+      --  drawText (Window, Text, null);
 
       -- Update the window
       display (Window);
    end loop;
 
    -- Cleanup resources
-   destroy (Music);
+   --  destroy (Music);
    destroy (Text);
    destroy (Font);
    destroy (Sprite);
