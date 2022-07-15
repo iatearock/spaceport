@@ -46,9 +46,6 @@ procedure Game is
    ExeDir : constant String := Containing_Directory (Command_Name);
 
    Vertex_Arr : sfVertexArray_Ptr;
-   X          : Real_Vector := (200.0, 300.0);
-   Y          : Real_Vector := (140.0, 200.0);
-   L          : array (0 .. 1) of Real_Vector (0 .. 1);
    WL         : Line.World_Line (0 .. 2);
    SL         : Line.Screen_Line (0 .. 2);
    SV         : Line.Screen_Vertices (0 .. 2);
@@ -62,6 +59,8 @@ begin
    Vertex_Arr      := Line.Screen_Line_To_Vertex_Arr_Ptr (SL, sfCyan);
    Ship_1          := Ship.Spawn ((0.0, -20.0), Ship.Small, Ship_Name);
    Ship_1.Waypoint := (0.0, 5.0);
+   Ship_1.Waypoints.Append ( (0.0,10.0));
+   Ship_1.Waypoints.Append ( (3.0,4.0));
    Gate1           := Gate.Create ((0.0, 0.0), (1.0, 0.0));
 
    -- Create the main Window
