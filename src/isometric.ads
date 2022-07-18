@@ -9,5 +9,6 @@ package Isometric is
    function To_Screen (Vec : Real_Vector) return Real_Vector;
    procedure Set_Tile_Size (S : Float);
    function To_World (Vec : Real_Vector) return Real_Vector;
+   function Nearest_Tile (Vec : Real_Vector) return Real_Vector;
 
 end Isometric;

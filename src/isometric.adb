@@ -22,4 +22,14 @@ package body Isometric is
       WY := (Vec (1) / Half_Tile_Height - (Vec (0) / Half_Tile_Width)) / 2.0;
       return (WX, WY);
    end To_World;
+
+   function Nearest_Tile (Vec : Real_Vector) return Real_Vector is
+      X, Y : Integer;
+      RV   : Real_Vector (0 .. 1);
+   begin
+      X  := Integer (Vec (Vec'First));
+      Y  := Integer (Vec (Vec'Last));
+      RV := (Float (X), Float (Y));
+      return RV;
+   end Nearest_Tile;
 end Isometric;

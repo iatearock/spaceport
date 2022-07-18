@@ -23,10 +23,12 @@ with Isometric;                use Isometric;
 with Line;
 with Ship;
 with Gate;
+with Draw;
 
 with Sf.Graphics.VertexArray;   use Sf.Graphics.VertexArray;
 with Sf.Graphics.PrimitiveType; use Sf.Graphics.PrimitiveType;
 with Sf.Graphics.View;          use Sf.Graphics.View;
+with Sf.System.Vector2;         use Sf.System.Vector2;
 
 procedure Game is
 
@@ -45,13 +47,16 @@ procedure Game is
 
    ExeDir : constant String := Containing_Directory (Command_Name);
 
-   Vertex_Arr : sfVertexArray_Ptr;
-   WL         : Line.World_Line (0 .. 2);
-   SL         : Line.Screen_Line (0 .. 2);
-   SV         : Line.Screen_Vertices (0 .. 2);
-   Ship_1     : Ship.Ship;
-   Ship_Name  : String := "012345";
-   Gate1      : Gate.Gate;
+   Window_Ptr    : sfWindow_Ptr;
+   Vertex_Arr    : sfVertexArray_Ptr;
+   WL            : Line.World_Line (0 .. 2);
+   SL            : Line.Screen_Line (0 .. 2);
+   SV            : Line.Screen_Vertices (0 .. 2);
+   Ship_1        : Ship.Ship;
+   Ship_Name     : String := "012345";
+   Gate1         : Gate.Gate;
+   Mouse_Pos     : sfVector2f;
+   Mouse_Pos_Int : sfVector2i;
 begin
 
    WL              := ((0.0, 0.0), (4.0, 0.0), (4.0, 1.0));
@@ -61,7 +66,8 @@ begin
    Ship_1.Waypoint := (0.0, 5.0);
    Ship_1.Waypoints.Append ((0.0, 10.0));
    Ship_1.Waypoints.Append ((3.0, 4.0));
-   Gate1 := Gate.Create ((0.0, 0.0), (1.0, 0.0));
+   Gate1     := Gate.Create ((0.0, 0.0), (1.0, 0.0));
+   Mouse_Pos := (X => 0.0, Y => 0.0);
 
    -- Create the main Window
    Window :=
@@ -119,6 +125,12 @@ begin
       Ship.Update (Ship_1);
       Ship.Draw (Window, Ship_1, Font);
       Gate.Draw (Window, Gate1, Font);
+
+      Mouse_Pos_Int := Mouse.getPosition (Window);
+      Mouse_Pos     := mapPixelToCoords (Window, Mouse_Pos_Int, View);
+      Draw.Square
+        (Window, sfRed,
+         Draw.RV_To_sfV (Isometric.Nearest_Tile (Draw.sfV_To_RV (Mouse_Pos))));
 
       -- Draw the text
       --  drawText (Window, Text, null);
