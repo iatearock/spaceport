@@ -10,7 +10,6 @@ package Path is
 
    use Path_Vector;
 
-   procedure Empty(P: Vector);
-
+   procedure Empty (P : Vector);
 
 end Path;

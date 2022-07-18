@@ -4,9 +4,9 @@ with Sf.Graphics.Text;         use Sf.Graphics.Text;
 with Sf.Graphics.CircleShape;  use Sf.Graphics.CircleShape;
 with Sf.Graphics.Color;        use Sf.Graphics.Color;
 with Line;
-with Ada.Containers; use Ada.Containers;
+with Ada.Containers;           use Ada.Containers;
 package body Ship is
-      package PV renames Path.Path_Vector; 
+   package PV renames Path.Path_Vector;
 
    function Spawn
      (Pos : Real_Vector; Class : Ship_Class; CallSign : String) return Ship
@@ -44,15 +44,15 @@ package body Ship is
       Displayment : Float;
       Delta_Vec   : Real_Vector (0 .. 1);
    begin
-      if PV.Length(S.Waypoints) > 0 then
+      if PV.Length (S.Waypoints) > 0 then
          Displayment := abs (S.Vel) * (1.0 / 60.0);
-         Delta_Vec   := PV.First_Element(S.Waypoints) - S.Pos;
+         Delta_Vec   := PV.First_Element (S.Waypoints) - S.Pos;
          S.Vel       := Speed (S.Class) * (Delta_Vec / abs (Delta_Vec));
          if abs (Delta_Vec) > Displayment then
             S.Pos := S.Pos + S.Vel * (1.0 / 60.0);
          else
-            if PV.Length(S.Waypoints) > 0 then
-               PV.Delete_First(S.Waypoints);
+            if PV.Length (S.Waypoints) > 0 then
+               PV.Delete_First (S.Waypoints);
             end if;
          end if;
       end if;
@@ -63,11 +63,11 @@ package body Ship is
      (renderWindow : Sf.Graphics.sfRenderWindow_Ptr; S : Ship;
       F            : Sf.Graphics.sfFont_Ptr)
    is
-      Vec        : sfVector2f;
-      RV         : Real_Vector (0 .. 1);
-      Vec2       : sfVector2f;
-      RV2        : Real_Vector (0 .. 1);
-      Leader     : Line.World_Line (0 .. 1);
+      Vec    : sfVector2f;
+      RV     : Real_Vector (0 .. 1);
+      Vec2   : sfVector2f;
+      RV2    : Real_Vector (0 .. 1);
+      Leader : Line.World_Line (0 .. 1);
 
    begin
       Vec    := ((S.Pos (S.Pos'First), S.Pos (S.Pos'Last)));

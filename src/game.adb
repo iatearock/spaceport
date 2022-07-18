@@ -50,7 +50,7 @@ procedure Game is
    SL         : Line.Screen_Line (0 .. 2);
    SV         : Line.Screen_Vertices (0 .. 2);
    Ship_1     : Ship.Ship;
-   Ship_Name  : String      := "012345";
+   Ship_Name  : String := "012345";
    Gate1      : Gate.Gate;
 begin
 
@@ -59,9 +59,9 @@ begin
    Vertex_Arr      := Line.Screen_Line_To_Vertex_Arr_Ptr (SL, sfCyan);
    Ship_1          := Ship.Spawn ((0.0, -20.0), Ship.Small, Ship_Name);
    Ship_1.Waypoint := (0.0, 5.0);
-   Ship_1.Waypoints.Append ( (0.0,10.0));
-   Ship_1.Waypoints.Append ( (3.0,4.0));
-   Gate1           := Gate.Create ((0.0, 0.0), (1.0, 0.0));
+   Ship_1.Waypoints.Append ((0.0, 10.0));
+   Ship_1.Waypoints.Append ((3.0, 4.0));
+   Gate1 := Gate.Create ((0.0, 0.0), (1.0, 0.0));
 
    -- Create the main Window
    Window :=
