@@ -9,6 +9,11 @@ package Isometric is
    function To_Screen (Vec : Real_Vector) return Real_Vector;
    procedure Set_Tile_Size (S : Float);
    function To_World (Vec : Real_Vector) return Real_Vector;
+
+   -- Round coordiantes to integer
    function Nearest_Tile (Vec : Real_Vector) return Real_Vector;
+
+   -- Take mouse coordinates, and return nearest tile screencoordinates
+   function Mouse_To_Tile (Vec : Real_Vector) return Real_Vector;
 
 end Isometric;

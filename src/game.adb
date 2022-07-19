@@ -57,6 +57,7 @@ procedure Game is
    Gate1         : Gate.Gate;
    Mouse_Pos     : sfVector2f;
    Mouse_Pos_Int : sfVector2i;
+   Mouse_RV      : Real_Vector (0 .. 1);
 begin
 
    WL              := ((0.0, 0.0), (4.0, 0.0), (4.0, 1.0));
@@ -128,9 +129,11 @@ begin
 
       Mouse_Pos_Int := Mouse.getPosition (Window);
       Mouse_Pos     := mapPixelToCoords (Window, Mouse_Pos_Int, View);
+      Mouse_RV      := Isometric.Nearest_Tile (Draw.sfV_To_RV (Mouse_Pos));
       Draw.Square
         (Window, sfRed,
-         Draw.RV_To_sfV (Isometric.Nearest_Tile (Draw.sfV_To_RV (Mouse_Pos))));
+         Draw.RV_To_sfV
+           (Isometric.Mouse_To_Tile (Draw.sfV_To_RV (Mouse_Pos))));
 
       -- Draw the text
       --  drawText (Window, Text, null);

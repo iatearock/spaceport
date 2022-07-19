@@ -32,4 +32,10 @@ package body Isometric is
       RV := (Float (X), Float (Y));
       return RV;
    end Nearest_Tile;
+
+   function Mouse_To_Tile (Vec : Real_Vector) return Real_Vector is
+   begin
+      return To_Screen (Nearest_Tile (To_World (Vec)));
+   end Mouse_To_Tile;
+
 end Isometric;
