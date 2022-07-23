@@ -14,7 +14,7 @@ package body Isometric is
       Tile_Size := S;
    end Set_Tile_Size;
 
-   -- Convert world coordinates to screen
+   -- Convert screen coordinates to world
    function To_World (Vec : Real_Vector) return Real_Vector is
       WX, WY : Float;
    begin
@@ -23,6 +23,7 @@ package body Isometric is
       return (WX, WY);
    end To_World;
 
+   -- nearest tile is the same as nearest integer (in world coord)
    function Nearest_Tile (Vec : Real_Vector) return Real_Vector is
       X, Y : Integer;
       RV   : Real_Vector (0 .. 1);
@@ -33,6 +34,7 @@ package body Isometric is
       return RV;
    end Nearest_Tile;
 
+   -- convert mouse coord to screen coord at nearest tile
    function Mouse_To_Tile (Vec : Real_Vector) return Real_Vector is
    begin
       return To_Screen (Nearest_Tile (To_World (Vec)));

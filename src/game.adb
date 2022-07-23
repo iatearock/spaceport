@@ -4,8 +4,9 @@ with Ada.Directories;  use Ada.Directories;
 
 with Sf.Window.VideoMode;
 use Sf, Sf.Window, Sf.Window.VideoMode;
-with Sf.Window.Event;  use Sf.Window.Event;
-with Sf.Window.Window; use Sf.Window.Window;
+with Sf.Window.Event;    use Sf.Window.Event;
+with Sf.Window.Window;   use Sf.Window.Window;
+with Sf.Window.Keyboard; use Sf.Window.Keyboard;
 
 with Sf.Graphics.Color;
 use Sf.Graphics, Sf.Graphics.Color;
@@ -24,6 +25,7 @@ with Line;
 with Ship;
 with Gate;
 with Draw;
+with Util;
 
 with Sf.Graphics.VertexArray;   use Sf.Graphics.VertexArray;
 with Sf.Graphics.PrimitiveType; use Sf.Graphics.PrimitiveType;
@@ -42,8 +44,9 @@ procedure Game is
    Font    : sfFont_Ptr;
    Text    : sfText_Ptr;
    --  Music   : sfMusic_Ptr;
-   event : sfEvent;
-   View  : sfView_Ptr;
+   event   : sfEvent;
+   View    : sfView_Ptr;
+   ViewHUD : sfView_Ptr;
 
    ExeDir : constant String := Containing_Directory (Command_Name);
 
@@ -58,6 +61,9 @@ procedure Game is
    Mouse_Pos     : sfVector2f;
    Mouse_Pos_Int : sfVector2i;
    Mouse_RV      : Real_Vector (0 .. 1);
+   ToolTip       : sfText_Ptr;
+   KeyGPressed   : Boolean;
+   ButtonG       : Boolean;
 begin
 
    WL              := ((0.0, 0.0), (4.0, 0.0), (4.0, 1.0));
@@ -70,18 +76,26 @@ begin
    Gate1     := Gate.Create ((0.0, 0.0), (1.0, 0.0));
    Mouse_Pos := (X => 0.0, Y => 0.0);
 
+   ToolTip := create;
+   ButtonG := False;
+
    -- Create the main Window
    Window :=
      create
        (Mode, "SFML window", sfResize or sfClose, sfDefaultContextSettings);
    setFramerateLimit (Window, 60);
 
+   -- use View to draw map
    View := create;
    setSize (View, (800.0, 600.0));
    setCenter (View, (0.0, 0.0));
    zoom (View, 1.0);
-
    setView (Window, View);
+
+   -- use ViewHUD to draw HUD
+   ViewHUD := create;
+   setSize (ViewHUD, (800.0, 600.0));
+   setCenter (ViewHUD, (400.0, 300.0));
 
    -- Load a sprite to display
    Texture := createFromFile (ExeDir & "/avatar.png", null);
@@ -92,7 +106,7 @@ begin
    -- Create a graphical text to display
    Font := createFromFile (ExeDir & "/Roboto-Regular.ttf");
 
-   --  Text := create;
+   Text := create;
    --  setString (Text, "ao");
    --  setFont (Text, Font);
    --  setCharacterSize (Text, 50);
@@ -107,14 +121,25 @@ begin
    -- Start the game loop
    while isOpen (Window) loop
 
+      ------------------------------
       -- Process events
+      ------------------------------
       while pollEvent (Window, event) loop
+
+         -- key just released
+         if event.eventType = sfEvtKeyReleased then
+            if event.key.code = sfKeyG then
+               Util.Toggle_Boolean (ButtonG);
+            end if;
+         end if;
 
          -- Close window : exit
          if event.eventType = sfEvtClosed then
             close (Window);
          end if;
       end loop;
+
+      setView (Window, View);
 
       -- Clear the screen
       clear (Window, sfBlack);
@@ -128,15 +153,35 @@ begin
       Gate.Draw (Window, Gate1, Font);
 
       Mouse_Pos_Int := Mouse.getPosition (Window);
-      Mouse_Pos     := mapPixelToCoords (Window, Mouse_Pos_Int, View);
-      Mouse_RV      := Isometric.Nearest_Tile (Draw.sfV_To_RV (Mouse_Pos));
+      -- screen coord after View transformation
+      Mouse_Pos := mapPixelToCoords (Window, Mouse_Pos_Int, View);
+      -- convert mouse pos to world coord
+      Mouse_RV := Isometric.To_World (Draw.sfV_To_RV (Mouse_Pos));
+
       Draw.Square
         (Window, sfRed,
          Draw.RV_To_sfV
            (Isometric.Mouse_To_Tile (Draw.sfV_To_RV (Mouse_Pos))));
 
+      Draw.Text
+        (Window, ToolTip, Font,
+         Integer (Mouse_RV (Mouse_RV'First))'Img & "," &
+         Integer (Mouse_RV (Mouse_RV'Last))'Img,
+         30, sfWhite,
+         Draw.RV_To_sfV
+           (Isometric.Mouse_To_Tile (Draw.sfV_To_RV (Mouse_Pos))));
+
       -- Draw the text
       --  drawText (Window, Text, null);
+
+      -----------------------------------
+      -- Draw HUD here
+      -----------------------------------
+      setView (Window, ViewHUD);
+
+      if ButtonG then
+         Draw.Text (Window, Text, Font, "G", 30, sfwhite, (20.0, 20.0));
+      end if;
 
       -- Update the window
       display (Window);

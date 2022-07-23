@@ -6,6 +6,8 @@ with Sf.System.Vector2; use Sf.System.Vector2;
 
 with Ada.Numerics.Real_Arrays; use Ada.Numerics.Real_Arrays;
 
+with Path;
+
 package Draw is
 
    function RV_To_sfV (V : Real_Vector) return sfVector2f;
@@ -18,4 +20,9 @@ package Draw is
    procedure Square
      (W   : sfRenderWindow_Ptr; Color : sf.Graphics.Color.sfColor;
       Pos : sfVector2f);
+
+   procedure PathVector
+     (W : sfRenderWindow_Ptr; Color : sf.Graphics.Color.sfColor;
+      P : Path.Path_Vector.Vector);
+
 end Draw;

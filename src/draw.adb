@@ -55,4 +55,16 @@ package body Draw is
       Line.Draw_World_Line (W, WL, Color);
    end Square;
 
+   procedure PathVector
+     (W : sfRenderWindow_Ptr; Color : sf.Graphics.Color.sfColor;
+      P : Path.Path_Vector.Vector)
+   is
+      WL : Line.World_Line (1 .. Integer (P.Length));
+   begin
+      for I in WL'Range loop
+         WL (I) := P.Element (I);
+      end loop;
+      Line.Draw_World_Line (W, WL, Color);
+   end PathVector;
+
 end Draw;

@@ -10,6 +10,6 @@ package Path is
 
    use Path_Vector;
 
-   procedure Empty (P : Vector);
+   function Create return Path_Vector.Vector;
 
 end Path;
